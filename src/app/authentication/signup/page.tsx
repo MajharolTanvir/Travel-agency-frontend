@@ -4,24 +4,24 @@ import Form from "@/components/FORM/Form";
 import FormInput from "@/components/FORM/FormInput";
 import Navbar from "@/components/Navbar/page";
 import ButtonCom from "@/components/UI/Button";
-import { useUserLoginMutation } from "@/redux/api/AuthApi";
+import { useUserSignupMutation } from "@/redux/api/AuthApi";
 import { storeUserInfo } from "@/services/auth.services";
 import { Divider, message } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const SignIn = () => {
-  const [userLogin] = useUserLoginMutation();
+const SignUp = () => {
+  const [userSignup] = useUserSignupMutation();
   const router = useRouter();
 
   const onSubmit = async (data: any) => {
-    message.loading("Signin....");
+    message.loading("Signup....");
     try {
-      const res = await userLogin(data).unwrap();
+      const res = await userSignup(data).unwrap();
       if (res?.accessToken) {
-        message.success("User sign in successfully");
-        router.push("/profile");
+        message.success("User sign up successfully");
+        // router.push("/profile");
         storeUserInfo({ accessToken: res?.accessToken });
       }
     } catch (error: any) {
@@ -37,6 +37,18 @@ const SignIn = () => {
           <Divider style={{ borderColor: "rgb(37 99 235)" }} />
           <Form submitHandler={onSubmit}>
             <FormInput
+              type="text"
+              name="firstName"
+              size="large"
+              label="First name"
+            ></FormInput>
+            <FormInput
+              type="text"
+              name="lastName"
+              size="large"
+              label="Last name"
+            ></FormInput>
+            <FormInput
               type="email"
               name="email"
               size="large"
@@ -48,16 +60,10 @@ const SignIn = () => {
               size="large"
               label="Password"
             ></FormInput>
-            <Link
-              href="/authentication/forget-password"
-              className="text-black hover:text-blue-600 py-2"
-            >
-              Forgotten password?
-            </Link>
             <div className="md:flex justify-around items-center gap-4">
               <ButtonCom>Submit</ButtonCom>
-              <Link className="w-full" href="/authentication/signup">
-                <ButtonCom>Create new account</ButtonCom>
+              <Link className="w-full" href="/authentication/signin">
+                <ButtonCom>Already have an account</ButtonCom>
               </Link>
             </div>
           </Form>
@@ -67,4 +73,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

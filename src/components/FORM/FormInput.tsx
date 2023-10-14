@@ -58,6 +58,13 @@ const FormInput = ({
               placeholder={placeholder}
               value={value ? value : field.value}
               defaultValue={defaultValue}
+              style={{
+                borderWidth: "0px 0px 2px 0px",
+                background: "transparent",
+                borderRadius: "0px",
+                marginBottom: "4px",
+                borderColor: "rgb(37 99 235)",
+              }}
             />
           ) : (
             <Input
@@ -67,6 +74,13 @@ const FormInput = ({
               placeholder={placeholder}
               value={value ? value : field.value}
               defaultValue={defaultValue}
+              style={{
+                borderWidth: "0px 0px 2px 0px",
+                background: "transparent",
+                borderRadius: "0px",
+                marginBottom: "4px",
+                borderColor: "rgb(37 99 235)",
+              }}
             />
           )
         }

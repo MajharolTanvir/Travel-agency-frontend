@@ -1,4 +1,3 @@
-
 import { authKey } from "@/constant/storageKey";
 import { ResponseErrorType, ResponseSuccessType } from "@/types";
 import { getFromLocalStorage } from "@/utils/local-storage";
@@ -25,11 +24,11 @@ instance.interceptors.request.use(
 );
 
 // Add a response interceptor
-//@ts-ignore
 instance.interceptors.response.use(
+  //@ts-ignore
   function (response) {
     const responseObject: ResponseSuccessType = {
-      data: response?.data?.data,
+      data: response?.data?.data || response?.data,
       meta: response?.data?.meta,
     };
     return responseObject;
