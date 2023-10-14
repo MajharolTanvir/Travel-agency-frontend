@@ -5,15 +5,16 @@ import FormInput from "@/components/FORM/FormInput";
 import Navbar from "@/components/Navbar/page";
 import ButtonCom from "@/components/UI/Button";
 import { useUserSignupMutation } from "@/redux/api/AuthApi";
-import { storeUserInfo } from "@/services/auth.services";
+import { getUserInfo, storeUserInfo } from "@/services/auth.services";
+import { UserInfoProps } from "@/types";
 import { Divider, message } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
 
 const SignUp = () => {
   const [userSignup] = useUserSignupMutation();
-  const router = useRouter();
+  const { role } = getUserInfo() as UserInfoProps;
 
   const onSubmit = async (data: any) => {
     message.loading("Signup....");
@@ -21,8 +22,8 @@ const SignUp = () => {
       const res = await userSignup(data).unwrap();
       if (res?.accessToken) {
         message.success("User sign up successfully");
-        // router.push("/profile");
         storeUserInfo({ accessToken: res?.accessToken });
+        redirect(`/${role}/profile`);
       }
     } catch (error: any) {
       message.error(error.message);

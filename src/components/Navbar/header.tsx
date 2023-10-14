@@ -6,8 +6,8 @@ import { UserOutlined } from "@ant-design/icons";
 
 const content = (
   <div className="flex flex-col justify-start items-center gap-2">
-    <Link className="w-20" href="/authentication/signin">Sign in</Link>
-    <Link className="w-20" href="/authentication/signup">Sign out</Link>
+    <Link className="w-20" href="/authentication/signin">Signin</Link>
+    <Link className="w-20" href="/authentication/signup">Signup</Link>
   </div>
 );
 

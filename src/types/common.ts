@@ -20,6 +20,12 @@ type IGenericErrorMessage = {
   message: string;
 };
 
+export type UserInfoProps = {
+  userId?: string,
+  userEmail?: string
+  role?: string
+}
+
 
 export interface IDepartment {
   id: string;

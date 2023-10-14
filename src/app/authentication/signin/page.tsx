@@ -5,15 +5,22 @@ import FormInput from "@/components/FORM/FormInput";
 import Navbar from "@/components/Navbar/page";
 import ButtonCom from "@/components/UI/Button";
 import { useUserLoginMutation } from "@/redux/api/AuthApi";
-import { storeUserInfo } from "@/services/auth.services";
+import { getUserInfo, storeUserInfo } from "@/services/auth.services";
+import { UserInfoProps } from "@/types";
 import { Divider, message } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
 
 const SignIn = () => {
   const [userLogin] = useUserLoginMutation();
-  const router = useRouter();
+  const { role } = getUserInfo() as UserInfoProps;
+
+  // useEffect(() => {
+  //   if (role) {
+  //     redirect(`/${role}/profile`);
+  //   }
+  // }, [role]);
 
   const onSubmit = async (data: any) => {
     message.loading("Signin....");
@@ -21,8 +28,8 @@ const SignIn = () => {
       const res = await userLogin(data).unwrap();
       if (res?.accessToken) {
         message.success("User sign in successfully");
-        router.push("/profile");
         storeUserInfo({ accessToken: res?.accessToken });
+        redirect(`/${role}/profile`);
       }
     } catch (error: any) {
       message.error(error.message);
