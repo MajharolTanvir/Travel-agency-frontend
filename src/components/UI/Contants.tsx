@@ -9,8 +9,7 @@ const Contents = ({ children }: { children: ReactNode }) => {
   return (
     <Content
       style={{
-        margin: "24px 16px",
-        padding: 24,
+        padding: 10,
         minHeight: '100vh',
         background: colorBgContainer,
       }}
