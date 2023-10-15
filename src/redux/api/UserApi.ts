@@ -44,6 +44,15 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [TagTypes.user, TagTypes.admin, TagTypes.super_admin],
     }),
+
+    changeRole: build.mutation({
+      query: (Data) => ({
+        url: `${USERS_URL}/${Data.id}`,
+        method: "PATCH",
+        data: Data.values,
+      }),
+      invalidatesTags: [TagTypes.user, TagTypes.admin, TagTypes.super_admin],
+    }),
   }),
 });
 
@@ -52,4 +61,5 @@ export const {
   useGetSingleUserQuery,
   useGetProfileQuery,
   useProfileUpdateMutation,
+  useChangeRoleMutation,
 } = profileApi;

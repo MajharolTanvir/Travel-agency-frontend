@@ -40,22 +40,24 @@ const Profile = () => {
             className="rounded-md w-full lg:w-[600px]"
             height={400}
           />
-          <div className=" mt-5 backdrop-blur-xl bg-blue-100 p-5 rounded-md">
-            <div className="flex justify-start items-center gap-2">
-              <h3 className="text-md md:text-2xl font-bold">
-                {data?.firstName}
-              </h3>
-              {data?.middleName && (
+          {data && (
+            <div className=" mt-5 backdrop-blur-xl bg-blue-100 p-5 rounded-md">
+              <div className="flex justify-start items-center gap-2">
                 <h3 className="text-md md:text-2xl font-bold">
-                  {data?.middleName}
+                  {data?.firstName}
                 </h3>
-              )}
-              <h3 className="text-md md:text-2xl font-bold">
-                {data?.lastName}
-              </h3>
+                {data?.middleName && (
+                  <h3 className="text-md md:text-2xl font-bold">
+                    {data?.middleName}
+                  </h3>
+                )}
+                <h3 className="text-md md:text-2xl font-bold">
+                  {data?.lastName}
+                </h3>
+              </div>
+              <h4 className="text-sm md:text-xl">{data?.Profile[0]?.bio}</h4>
             </div>
-            <h4 className="text-sm md:text-xl">{data?.Profile[0]?.bio}</h4>
-          </div>
+          )}
         </div>
         <div className="h-0.5 md:w-0.5 md:h-96 bg-black/40 my-5"></div>
         <div className="w-full">
