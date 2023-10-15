@@ -1,9 +1,15 @@
 import React from "react";
 
-const ButtonCom = ({ children }: { children: React.ReactNode }) => {
+type ButtonProps = {
+  children:  React.ReactNode,
+  onclick?: any
+}
+
+const ButtonCom = ({ children, onclick }: ButtonProps) => {
   return (
     <button
-      className="bg-blue-700 hover:bg-transparent hover:border-2 hover:border-blue-700 text-white w-full border-0 my-1 py-2 rounded-md hover:text-blue-600"
+      onClick={onclick}
+      className="bg-blue-700 hover:bg-transparent hover:border-blue-700 text-white w-full border-2 my-1 py-1 px-3 rounded-md hover:text-blue-600"
     >
       {children}
     </button>

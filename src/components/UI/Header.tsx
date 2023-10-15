@@ -40,7 +40,7 @@ const HeaderPage = ({ collapsed, setCollapsed }: collapsedProps) => {
   return (
     <Header
       style={{
-        padding: 0,
+        padding: '0 20px',
         background: colorBgContainer,
         display: "flex",
         justifyContent: "space-between",
