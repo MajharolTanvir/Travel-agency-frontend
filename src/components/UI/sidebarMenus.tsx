@@ -11,17 +11,17 @@ import { USER_ROLE } from "@/constant/role";
 import { removeUserInfo } from "@/services/auth.services";
 import { authKey } from "@/constant/storageKey";
 import { redirect } from "next/navigation";
-import { FaUserTie } from "react-icons/fa";
+import { FaUserTie, FaHotel } from "react-icons/fa";
 import { MdPlace } from "react-icons/md";
-import { BiWorld, BiSolidMapAlt } from "react-icons/bi";
-
+import { BiWorld, BiSolidMapAlt, BiSolidHotel } from "react-icons/bi";
+import { AiOutlinePlusSquare } from "react-icons/ai";
 
 
 export const SidebarMenus = (role: string) => {
   const logout = () => {
     removeUserInfo(authKey);
-    message.info("Sign out successfully");
     redirect("/authentication/signin");
+    message.info("Sign out successfully");
   };
 
   const defaultSidebarItems: MenuProps["items"] = [
@@ -59,17 +59,17 @@ export const SidebarMenus = (role: string) => {
     ...commonAdminSidebarItems,
     {
       label: <Link href={`/${role}/hotel`}>Hotel</Link>,
-      icon: <TableOutlined />,
+      icon: <FaHotel />,
       key: `/${role}/hotel`,
     },
     {
       label: <Link href={`/${role}/room`}>Room</Link>,
-      icon: <TableOutlined />,
+      icon: <BiSolidHotel />,
       key: `/${role}/room`,
     },
     {
       label: <Link href={`/${role}/room-facilities`}>Room Facilities</Link>,
-      icon: <TableOutlined />,
+      icon: <AiOutlinePlusSquare />,
       key: `/${role}/room-facilities`,
     },
 

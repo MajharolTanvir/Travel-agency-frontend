@@ -10,17 +10,11 @@ import { UserInfoProps } from "@/types";
 import { Divider, message } from "antd";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 
 const SignIn = () => {
   const [userLogin] = useUserLoginMutation();
   const { role } = getUserInfo() as UserInfoProps;
-
-  // useEffect(() => {
-  //   if (role) {
-  //     redirect(`/${role}/profile`);
-  //   }
-  // }, [role]);
 
   const onSubmit = async (data: any) => {
     message.loading("Signin....");

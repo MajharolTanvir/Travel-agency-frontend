@@ -68,12 +68,12 @@ const UpdatePlace = ({ params }: IDProps) => {
         <BreadcrumbCom
           items={[
             {
-              label: "Super_Admin",
-              link: "/super_admin",
+              label: "Admin",
+              link: "/admin",
             },
             {
               label: "Manage Place",
-              link: "/super_admin/place",
+              link: "/admin/place",
             },
           ]}
         />

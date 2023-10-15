@@ -11,76 +11,63 @@ import ButtonCom from "@/components/UI/Button";
 import DetailsTab from "@/components/UI/DetailsTab";
 import BreadcrumbCom from "@/components/UI/breadcrumb";
 import { useGetAllDistrictQuery } from "@/redux/api/DistrictApi";
-import {
-  useGetSinglePlaceQuery,
-  useUpdatedPlaceMutation,
-} from "@/redux/api/PlaceApi";
+import { useGetAllDivisionQuery } from "@/redux/api/DivisionApi";
+import { useCreatePlaceMutation } from "@/redux/api/PlaceApi";
 import { message } from "antd";
 import React, { useState } from "react";
 
-type IDProps = {
-  params: any;
-};
-
-const UpdatePlace = ({ params }: IDProps) => {
+const CreatePlace = () => {
   const [imageUrl, setImageUrl] = useState<string | undefined>();
-  const { id } = params;
-  const [updatePlace] = useUpdatedPlaceMutation();
-  const { data, isLoading } = useGetSinglePlaceQuery(id);
-  const { data: districtData } = useGetAllDistrictQuery({});
+  const [createPlace] = useCreatePlaceMutation();
+  const { data, isLoading } = useGetAllDistrictQuery({});
 
   if (isLoading) {
-    <p>Loading..........</p>;
+    <p>Loading.............</p>;
   }
 
-  const districts = districtData?.district;
-  const districtOptions = districts?.map((district: any) => {
+  const districts = data?.district;
+  //@ts-ignore
+  const districtOptions = districts?.map((district) => {
     return {
+      //@ts-ignore
       label: district?.title,
+      //@ts-ignore
       value: district?.id,
     };
   });
 
-  const onSubmit = async (values: any) => {
-    message.loading("Updating....");
-    const data = {
-      id: id,
-      values: values,
-    };
+  const onSubmit = async (data: any) => {
+    message.loading("Creating....");
+    data.placeImage = imageUrl && imageUrl;
+
     try {
-      const res = await updatePlace(data);
+      const res = await createPlace(data);
       if (!!res) {
-        message.success("Place updated successfully");
+        message.success("Place created successfully");
       }
     } catch (error: any) {
       message.error(error.message);
     }
   };
-
-  const defaultValues = {
-    title: data?.title || "",
-    description: data?.description || "",
-  };
-
   return (
     <div>
       <div className="md:flex justify-between items-center">
         <BreadcrumbCom
           items={[
             {
-              label: "Super_Admin",
-              link: "/super_admin",
+              label: "Admin",
+              link: "/admin",
             },
             {
-              label: "Manage Place",
-              link: "/super_admin/place",
+              label: "Manage place",
+              link: "/admin/place",
             },
           ]}
         />
       </div>
-      <DetailsTab title="Update place">
+      <DetailsTab title="Create place">
         <div>
-          <Form submitHandler={onSubmit} defaultValues={defaultValues}>
+          <Form submitHandler={onSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 justify-start items-start gap-5">
               <div>
                 <FormInput
@@ -96,9 +83,10 @@ const UpdatePlace = ({ params }: IDProps) => {
                   label="District"
                   options={districtOptions as ISelectFieldOptions[]}
                   size="large"
-                  placeholder={data?.district?.title}
+                  placeholder="Select district"
                 />
               </div>
+
               <div>
                 <ImageUpload
                   imageUrl={imageUrl}
@@ -121,4 +109,4 @@ const UpdatePlace = ({ params }: IDProps) => {
   );
 };
 
-export default UpdatePlace;
+export default CreatePlace;
