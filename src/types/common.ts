@@ -1,7 +1,7 @@
 export interface IMeta {
-  limit: number;
-  page: number;
-  total: number;
+  limit?: number;
+  page?: number;
+  total?: number;
 }
 
 export type ResponseSuccessType = {

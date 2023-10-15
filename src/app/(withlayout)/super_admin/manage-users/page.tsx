@@ -5,15 +5,13 @@ import { Input, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import BreadcrumbCom from "@/components/UI/breadcrumb";
 import DetailsTab from "@/components/UI/DetailsTab";
-import { EditOutlined, ReloadOutlined, EyeOutlined } from "@ant-design/icons";
+import { ReloadOutlined, EyeOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useGetAllProfileQuery } from "@/redux/api/UserApi";
 import { useDebounced } from "@/redux/hook";
 import TableComponent from "@/components/UI/table";
 import ButtonCom from "@/components/UI/Button";
-import FormSelectFields from "@/components/FORM/FormSelectFields";
 import Link from "next/link";
-import { userRole } from "@/constant/global";
 
 const ManageUser = () => {
   const query: Record<string, any> = {};
@@ -39,11 +37,10 @@ const ManageUser = () => {
   }
 
   const { data, isLoading } = useGetAllProfileQuery({ ...query });
-
   //@ts-ignore
-  const users = data?.users?.data;
+  const users = data?.users;
   //@ts-ignore
-  const meta = data?.users?.meta;
+  const meta = data?.meta;
 
   const columns: ColumnsType = [
     {
@@ -139,6 +136,7 @@ const ManageUser = () => {
           loading={isLoading}
           columns={columns}
           pageSize={size}
+          //@ts-ignore
           totalPages={meta?.total}
           showSizeChanger={true}
           onPaginationChange={onPaginationChange}
