@@ -106,20 +106,14 @@ const Division = () => {
 
   return (
     <div>
-      <div className="md:flex justify-between items-center">
-        <BreadcrumbCom
-          items={[
-            {
-              label: "Super_Admin",
-              link: "/super_admin",
-            },
-          ]}
-        />
-
-        <Link href="/super_admin/division/create-division">
-          <ButtonCom>Create division</ButtonCom>
-        </Link>
-      </div>
+      <BreadcrumbCom
+        items={[
+          {
+            label: "Super_Admin",
+            link: "/super_admin",
+          },
+        ]}
+      />
       <DetailsTab title="Manage division">
         <div className="md:flex justify-between items-center gap-5 mb-5">
           <Input
@@ -130,7 +124,11 @@ const Division = () => {
               width: "20%",
             }}
           />
+
           <div className="flex justify-between items-center gap-2">
+            <Link href="/super_admin/division/create-division">
+              <ButtonCom>Create division</ButtonCom>
+            </Link>
             {(!!sortBy || !!sortOrder || !!searchTerm) && (
               <ButtonCom onclick={resetFilters}>
                 <ReloadOutlined />

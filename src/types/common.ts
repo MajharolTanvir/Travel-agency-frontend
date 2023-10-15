@@ -30,3 +30,16 @@ export interface IUser {
   data?: any;
   meta?: any;
 }
+
+export interface IDivision {
+  title: any;
+  title: any;
+  id: any;
+  data?: any;
+  meta?: any;
+}
+
+export interface IDistrict {
+  data?: any;
+  meta?: any;
+}

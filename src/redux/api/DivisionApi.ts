@@ -1,4 +1,4 @@
-import { IMeta, IUser } from "@/types";
+import { IDivision, IMeta } from "@/types";
 import { TagTypes } from "../tagTypes";
 import { baseApi } from "./baseApi";
 
@@ -21,7 +21,7 @@ export const divisionApi = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      transformResponse: (response: IUser[], meta: IMeta[]) => {
+      transformResponse: (response: IDivision[], meta: IMeta[]) => {
         return {
           division: response,
           meta,
