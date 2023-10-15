@@ -5,41 +5,45 @@ import FormInput from "@/components/FORM/FormInput";
 import FormSelectFields, {
   ISelectFieldOptions,
 } from "@/components/FORM/FormSelectFields";
+import FormTextArea from "@/components/FORM/FormTextArea";
 import ImageUpload from "@/components/FORM/UploadSingleImage";
 import ButtonCom from "@/components/UI/Button";
 import DetailsTab from "@/components/UI/DetailsTab";
 import BreadcrumbCom from "@/components/UI/breadcrumb";
-import { useCreateDistrictMutation } from "@/redux/api/DistrictApi";
+import { useGetAllDistrictQuery } from "@/redux/api/DistrictApi";
 import { useGetAllDivisionQuery } from "@/redux/api/DivisionApi";
+import { useCreatePlaceMutation } from "@/redux/api/PlaceApi";
 import { message } from "antd";
 import React, { useState } from "react";
 
-const CreateDivision = () => {
+const CreatePlace = () => {
   const [imageUrl, setImageUrl] = useState<string | undefined>();
-  const [createDistrict] = useCreateDistrictMutation();
-  const { data, isLoading } = useGetAllDivisionQuery({});
+  const [createPlace] = useCreatePlaceMutation();
+  const { data, isLoading } = useGetAllDistrictQuery({});
 
   if (isLoading) {
     <p>Loading.............</p>;
   }
 
+  const districts = data?.district;
   //@ts-ignore
-  const divisions = data?.division;
-  const divisionOptions = divisions?.map((division) => {
+  const districtOptions = districts?.map((district) => {
     return {
-      label: division?.title,
-      value: division?.id,
+      //@ts-ignore
+      label: district?.title,
+      //@ts-ignore
+      value: district?.id,
     };
   });
 
   const onSubmit = async (data: any) => {
     message.loading("Creating....");
-    data.districtImage = imageUrl && imageUrl;
+    data.placeImage = imageUrl && imageUrl;
 
     try {
-      const res = await createDistrict(data);
+      const res = await createPlace(data);
       if (!!res) {
-        message.success("District created successfully");
+        message.success("Place created successfully");
       }
     } catch (error: any) {
       message.error(error.message);
@@ -55,13 +59,13 @@ const CreateDivision = () => {
               link: "/super_admin",
             },
             {
-              label: "Manage district",
-              link: "/super_admin/district",
+              label: "Manage place",
+              link: "/super_admin/place",
             },
           ]}
         />
       </div>
-      <DetailsTab title="Create district">
+      <DetailsTab title="Create place">
         <div>
           <Form submitHandler={onSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 justify-start items-start gap-5">
@@ -75,19 +79,24 @@ const CreateDivision = () => {
               </div>
               <div>
                 <FormSelectFields
-                  name="divisionId"
-                  label="Division"
-                  options={divisionOptions as ISelectFieldOptions[]}
+                  name="districtId"
+                  label="District"
+                  options={districtOptions as ISelectFieldOptions[]}
                   size="large"
-                  placeholder="Select division"
+                  placeholder="Select district"
                 />
               </div>
+
               <div>
                 <ImageUpload
                   imageUrl={imageUrl}
                   setImageUrl={setImageUrl}
                 ></ImageUpload>
               </div>
+            </div>
+
+            <div>
+              <FormTextArea name="description" label="Description" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-3">
@@ -100,4 +109,4 @@ const CreateDivision = () => {
   );
 };
 
-export default CreateDivision;
+export default CreatePlace;
