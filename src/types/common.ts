@@ -45,3 +45,8 @@ export interface IPlace {
   data?: any;
   meta?: any;
 }
+
+export interface IHotel {
+  data?: any;
+  meta?: any;
+}

@@ -27,3 +27,37 @@ export const genderOptions = [
     value: "Other",
   },
 ];
+
+
+
+
+export const hotelOptions = [
+  {
+    label: "Five Star",
+    value: "Fivestar",
+  },
+  {
+    label: "Four star",
+    value: "Fourstar",
+  },
+  {
+    label: "Three star",
+    value: "Threestar",
+  },
+  {
+    label: "Two star",
+    value: "Twostar",
+  },
+  {
+    label: "One star",
+    value: "Onestar",
+  },
+  {
+    label: "Resort",
+    value: "Resort",
+  },
+  {
+    label: "Vilas",
+    value: "Vilas",
+  }
+];
