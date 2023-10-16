@@ -6,56 +6,60 @@ import FormSelectFields, {
   ISelectFieldOptions,
 } from "@/components/FORM/FormSelectFields";
 import FormTextArea from "@/components/FORM/FormTextArea";
-import ImageUpload from "@/components/FORM/UploadSingleImage";
+import FormTimePicker from "@/components/FORM/FormTimePicker";
+import MultipleImageUpload from "@/components/FORM/UploadMultiImage";
 import ButtonCom from "@/components/UI/Button";
 import DetailsTab from "@/components/UI/DetailsTab";
 import BreadcrumbCom from "@/components/UI/breadcrumb";
-import { hotelOptions } from "@/constant/global";
-import { useGetAllDistrictQuery } from "@/redux/api/DistrictApi";
+import { useGetAllHotelQuery } from "@/redux/api/HotelApi";
 import {
-  useGetSingleHotelQuery,
-  useUpdatedHotelMutation,
-} from "@/redux/api/HotelApi";
-import {
-  useGetSinglePlaceQuery,
-  useUpdatedPlaceMutation,
-} from "@/redux/api/PlaceApi";
+  useGetSingleRoomQuery,
+  useUpdatedRoomMutation,
+} from "@/redux/api/RoomApi";
 import { message } from "antd";
 import React, { useState } from "react";
-    
+
 type IDProps = {
   params: any;
 };
 
-const UpdateHotel = ({ params }: IDProps) => {
-  const [imageUrl, setImageUrl] = useState<string | undefined>();
+interface UploadedImage {
+  url: string;
+  thumbUrl: string;
+}
+
+const UpdateRoom = ({ params }: IDProps) => {
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const { id } = params;
-  const [updateHotel] = useUpdatedHotelMutation();
-  const { data, isLoading } = useGetSingleHotelQuery(id);
-  const { data: districtData } = useGetAllDistrictQuery({});
+  const [updateRoom] = useUpdatedRoomMutation();
+  const { data, isLoading } = useGetSingleRoomQuery(id);
+  const { data: hotelData } = useGetAllHotelQuery({});
 
   if (isLoading) {
     <p>Loading..........</p>;
   }
 
-  const districts = districtData?.district;
-  const districtOptions = districts?.map((district: any) => {
+  const hotels = hotelData?.hotel;
+  const hotelsOptions = hotels?.map((hotel: any) => {
     return {
-      label: district?.title,
-      value: district?.id,
+      label: hotel?.title,
+      value: hotel?.id,
     };
   });
 
   const onSubmit = async (values: any) => {
     message.loading("Updating....");
+
+    values.roomPrice = parseInt(values?.roomPrice);
+    values.roomImages = uploadedImages && uploadedImages;
     const data = {
       id: id,
       values: values,
     };
     try {
-      const res = await updateHotel(data);
+      const res = await updateRoom(data);
       if (!!res) {
-        message.success("Hotel updated successfully");
+        message.success("Room updated successfully");
       }
     } catch (error: any) {
       message.error(error.message);
@@ -63,12 +67,9 @@ const UpdateHotel = ({ params }: IDProps) => {
   };
 
   const defaultValues = {
-    title: data?.title || "",
+    roomType: data?.roomType || "",
     description: data?.description || "",
-    contactNo: data?.contactNo || "",
-    location: data?.location || "",
-    mapLocationUrl: data?.mapLocationUrl || "",
-    hotelType: data?.hotelType || "",
+    roomPrice: data?.roomPrice || "",
   };
 
   return (
@@ -93,8 +94,8 @@ const UpdateHotel = ({ params }: IDProps) => {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 justify-start items-start gap-5">
               <div>
                 <FormInput
-                  name="title"
-                  label="Title"
+                  name="roomType"
+                  label="Room Type"
                   size="large"
                   type="text"
                 />
@@ -102,48 +103,34 @@ const UpdateHotel = ({ params }: IDProps) => {
 
               <div>
                 <FormInput
-                  name="contactNo"
-                  label="Contact no"
+                  name="roomPrice"
+                  label="Room price"
                   size="large"
                   type="text"
                 />
               </div>
 
               <div>
-                <FormInput
-                  name="location"
-                  label="Area Location"
-                  size="large"
-                  type="text"
+                <FormTimePicker
+                  name="checkInTime"
+                  label={`Check In Time - ${data?.checkInTime}`}
+                />
+              </div>
+
+              <div>
+                <FormTimePicker
+                  name="checkOutTime"
+                  label={`Check Out Time - ${data?.checkOutTime}`}
                 />
               </div>
 
               <div>
                 <FormSelectFields
-                  name="districtId"
-                  label="District"
-                  options={districtOptions as ISelectFieldOptions[]}
+                  name="hotelId"
+                  label="Hotel Name"
+                  options={hotelsOptions as ISelectFieldOptions[]}
                   size="large"
-                  placeholder={data?.district?.title}
-                />
-              </div>
-
-              <div>
-                <FormSelectFields
-                  name="hotelType"
-                  label="Hotel Type"
-                  options={hotelOptions as ISelectFieldOptions[]}
-                  size="large"
-                  placeholder="Select place"
-                />
-              </div>
-
-              <div>
-                <FormInput
-                  name="mapLocationUrl"
-                  label="Map Location url"
-                  size="large"
-                  type="text"
+                  placeholder={data?.hotel?.title}
                 />
               </div>
 
@@ -152,10 +139,10 @@ const UpdateHotel = ({ params }: IDProps) => {
               </div>
 
               <div>
-                <ImageUpload
-                  imageUrl={imageUrl}
-                  setImageUrl={setImageUrl}
-                ></ImageUpload>
+                <MultipleImageUpload
+                  uploadedImages={uploadedImages}
+                  setUploadedImages={setUploadedImages}
+                ></MultipleImageUpload>
               </div>
             </div>
 
@@ -169,4 +156,4 @@ const UpdateHotel = ({ params }: IDProps) => {
   );
 };
 
-export default UpdateHotel;
+export default UpdateRoom;

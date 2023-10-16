@@ -10,10 +10,11 @@ import { UserInfoProps } from "@/types";
 import { Divider, message } from "antd";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const SignIn = () => {
   const [userLogin] = useUserLoginMutation();
+  const [loading, setLoading] = useState(false);
   const { role } = getUserInfo() as UserInfoProps;
 
   const onSubmit = async (data: any) => {
@@ -23,7 +24,11 @@ const SignIn = () => {
       if (res?.accessToken) {
         message.success("User sign in successfully");
         storeUserInfo({ accessToken: res?.accessToken });
-        redirect(`/${role}/profile`);
+        setLoading(!loading);
+        if (role) {
+          redirect(`/${role}/profile`);
+          setLoading(!loading);
+        }
       }
     } catch (error: any) {
       message.error(error.message);

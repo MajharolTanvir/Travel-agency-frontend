@@ -9,12 +9,13 @@ import { getUserInfo, storeUserInfo } from "@/services/auth.services";
 import { UserInfoProps } from "@/types";
 import { Divider, message } from "antd";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const SignUp = () => {
   const [userSignup] = useUserSignupMutation();
   const { role } = getUserInfo() as UserInfoProps;
+  const router = useRouter();
 
   const onSubmit = async (data: any) => {
     message.loading("Signup....");
@@ -23,7 +24,7 @@ const SignUp = () => {
       if (res?.accessToken) {
         message.success("User sign up successfully");
         storeUserInfo({ accessToken: res?.accessToken });
-        redirect(`/${role}/profile`);
+        router.push(`/${role}/profile`);
       }
     } catch (error: any) {
       message.error(error.message);

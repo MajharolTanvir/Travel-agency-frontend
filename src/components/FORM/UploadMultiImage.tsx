@@ -1,45 +1,79 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Modal, Upload } from "antd";
+import type { RcFile, UploadProps } from "antd/es/upload";
+import type { UploadFile } from "antd/es/upload/interface";
 import axios from "axios";
-import { FormEvent } from "react";
 import Image from "next/image";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
-function ImageUpload() {
-  const [images, setImages] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  const handleImageUpload = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
-    if (images.length === 0) {
-      console.error("No images selected");
-      return;
+const getBase64 = (file: RcFile): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+const MultipleImageUpload = ({ uploadedImages, setUploadedImages }: any) => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+      const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
     }
 
-    const formData = new FormData();
-    images.forEach((image, index) => {
-      formData.append(`image${index + 1}`, image);
-    });
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
+    );
+  };
+
+  const handleChange: UploadProps["onChange"] = async ({
+    fileList: newFileList,
+    file,
+  }) => {
+    setFileList(newFileList);
 
     try {
+      const formData = new FormData();
+      formData.append("image", file.originFileObj as RcFile);
+
       const response = await axios.post(
         "https://api.imgbb.com/1/upload",
         formData,
         {
           headers: {
-            "content-type": "multipart/form-data",
+            "Content-Type": "multipart/form-data",
           },
           params: {
-            key: "YOUR_IMGBB_API_KEY",
+            key: "74c8424adb20f9d1cb8d5b37f691776a",
           },
         }
       );
 
       if (response.data.status === 200) {
-        const imageUrls = response.data.data.image.map(
-          (imgData: { url: any; }) => imgData.url
-        );
-        console.log("Image URLs:", imageUrls);
-        setImageUrls(imageUrls);
+        const imageURL = response.data.data.url;
+        const uploadedFile = newFileList.find((item) => item.uid === file.uid);
+
+        if (uploadedFile) {
+          uploadedFile.url = imageURL;
+          uploadedFile.thumbUrl = imageURL;
+
+          if (!uploadedImages.some((img: { url: any; }) => img.url === imageURL)) {
+            setUploadedImages([...uploadedImages, { url: imageURL }]);
+          }
+        }
       } else {
         console.error("Image upload failed:", response.data.error);
       }
@@ -48,36 +82,34 @@ function ImageUpload() {
     }
   };
 
-  return (
+  const uploadButton = (
     <div>
-      <h1>Image Upload</h1>
-      <form onSubmit={handleImageUpload}>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={(e) => setImages(Array.from(e.target.files || []))}
-        />
-        <button type="submit">Upload</button>
-      </form>
-
-      {imageUrls.length > 0 && (
-        <div>
-          <h2>Uploaded Images</h2>
-          {imageUrls.map((imageUrl, index) => (
-            <div key={index}>
-              <Image
-                src={imageUrl}
-                alt={`Uploaded ${index + 1}`}
-                width={300}
-                height={200}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-}
 
-export default ImageUpload;
+  return (
+    <>
+      <Upload
+        action="https://api.imgbb.com/1/upload"
+        listType="picture-card"
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={handleChange}
+      >
+        {fileList.length >= 8 ? null : uploadButton}
+      </Upload>
+      <Modal open={previewOpen} title={previewTitle} onCancel={handleCancel}>
+        <Image
+          alt="Uploaded images"
+          width={400}
+          height={400}
+          src={previewImage}
+        />
+      </Modal>
+    </>
+  );
+};
+
+export default MultipleImageUpload;

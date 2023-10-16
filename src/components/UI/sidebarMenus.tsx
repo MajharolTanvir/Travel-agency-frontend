@@ -10,17 +10,18 @@ import Link from "next/link";
 import { USER_ROLE } from "@/constant/role";
 import { removeUserInfo } from "@/services/auth.services";
 import { authKey } from "@/constant/storageKey";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FaUserTie, FaHotel } from "react-icons/fa";
 import { MdPlace } from "react-icons/md";
 import { BiWorld, BiSolidMapAlt, BiSolidHotel } from "react-icons/bi";
 import { AiOutlinePlusSquare } from "react-icons/ai";
 
-
 export const SidebarMenus = (role: string) => {
+  const router = useRouter();
+
   const logout = () => {
     removeUserInfo(authKey);
-    redirect("/authentication/signin");
+    router.push("/authentication/signin");
     message.info("Sign out successfully");
   };
 
